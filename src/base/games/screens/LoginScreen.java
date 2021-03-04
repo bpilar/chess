@@ -61,7 +61,7 @@ public class LoginScreen implements BodyScreen, ActionListener {
             }
 
             try (Statement stmt = parent.conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT Haslo, Typ FROM Uzytkownicy WHERE Nazwa_uzy="+inputLogin);) {
+                 ResultSet rs = stmt.executeQuery("SELECT Haslo, Typ FROM Uzytkownicy WHERE Nazwa_uzy='" + inputLogin + "'");) {
                 if (rs.next()) {
                     if (Objects.equals(inputPassword, rs.getString(1))) {
                         switch (rs.getString(2)) {
@@ -84,9 +84,9 @@ public class LoginScreen implements BodyScreen, ActionListener {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
             }
 
-            if (Objects.equals(inputLogin, "tak") && Objects.equals(inputPassword, "tak")) {
-                parent.switchCurrentScreenTo(new StartScreen(parent,this));
-            }
+//            if (Objects.equals(inputLogin, "tak") && Objects.equals(inputPassword, "tak")) {
+//                parent.switchCurrentScreenTo(new StartScreen(parent,this));
+//            }
         }
     }
 }
