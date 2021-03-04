@@ -1,0 +1,109 @@
+package base.games;
+
+import base.games.screens.*;
+
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class AppWindow extends JFrame implements ActionListener {
+    public static int width = 400;
+    public static int height = 400;
+
+    public JFrame mainFrame;
+    public Container mainContentPane;
+    public JPanel header;
+    public JPanel body;
+    public BodyScreen currentScreen;
+
+    public JButton quitButton = new JButton("QUIT");
+
+    public Connection conn = null;
+    public boolean connected = false;
+
+    public AppWindow() {
+
+        mainFrame = new JFrame("Bazunia");
+        mainContentPane = mainFrame.getContentPane();
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.setSize(width,height);
+        mainFrame.setLayout(new GridBagLayout());
+        header = new JPanel();
+        body = new JPanel();
+        header.setBorder(BorderFactory.createEtchedBorder());
+        body.setBorder(BorderFactory.createEtchedBorder());
+        header.setLayout(new FlowLayout());
+        body.setLayout(new GridBagLayout());
+
+        mainContentPane.add(header, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        mainContentPane.add(body, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.9,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        quitButton.addActionListener(this);
+        header.add(quitButton);
+        mainFrame.setVisible(true);
+
+            System.out.println("Created AppWindow");
+
+        switchCurrentScreenTo(new StartScreen(this, currentScreen));
+
+        DoAnything();
+    }
+
+
+
+    public void DisconnectOracle() {
+        try {
+            currentScreen.getDisplayPanel().add(new JLabel("Disconnecting:"));
+            conn.close();
+            connected = false;
+            currentScreen.getDisplayPanel().add(new JLabel("disconnected"));
+                System.out.println("Rozłączono z bazą danych");
+        } catch (SQLException ex) {
+            currentScreen.getDisplayPanel().add(new JLabel("failed"));
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void DoAnything() {
+        try (CallableStatement stmt = conn.prepareCall("{? = call PracNazw(?,?)}")){
+            stmt.setInt(2, 100);
+            stmt.registerOutParameter(1, Types.INTEGER);
+            stmt.registerOutParameter(3, Types.VARCHAR);
+            stmt.execute();
+            if(stmt.getInt(1)==1) {
+                System.out.println("Done: " + stmt.getString(3));
+            }
+            else {
+                System.out.println("Err...");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+        }
+    }
+
+    public void switchCurrentScreenTo(BodyScreen scr) {
+        body.removeAll();
+        body.add(scr.getDisplayPanel(), new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        currentScreen = scr;
+        body.updateUI();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        Object object = event.getSource();
+
+        if(object == quitButton)
+        {
+            if(connected) DisconnectOracle();
+            System.exit(0);
+        }
+    }
+}
