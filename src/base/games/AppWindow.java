@@ -53,12 +53,10 @@ public class AppWindow extends JFrame implements ActionListener {
 
         switchCurrentScreenTo(new StartScreen(this, currentScreen));
 
-        DoAnything();
+        doAnything();
     }
 
-
-
-    public void DisconnectOracle() {
+    public void disconnectOracle() {
         try {
             currentScreen.getDisplayPanel().add(new JLabel("Disconnecting:"));
             conn.close();
@@ -71,7 +69,7 @@ public class AppWindow extends JFrame implements ActionListener {
         }
     }
 
-    public void DoAnything() {
+    public void doAnything() {
         try (CallableStatement stmt = conn.prepareCall("{? = call PracNazw(?,?)}")){
             stmt.setInt(2, 100);
             stmt.registerOutParameter(1, Types.INTEGER);
@@ -102,7 +100,7 @@ public class AppWindow extends JFrame implements ActionListener {
 
         if(object == quitButton)
         {
-            if(connected) DisconnectOracle();
+            if(connected) disconnectOracle();
             System.exit(0);
         }
     }
