@@ -57,33 +57,45 @@ public class AppWindow extends JFrame implements ActionListener {
     }
 
     public void disconnectOracle() {
-        try {
-            currentScreen.getDisplayPanel().add(new JLabel("Disconnecting:"));
-            conn.close();
-            connected = false;
-            currentScreen.getDisplayPanel().add(new JLabel("disconnected"));
-                System.out.println("Rozłączono z bazą danych");
-        } catch (SQLException ex) {
-            currentScreen.getDisplayPanel().add(new JLabel("failed"));
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        currentScreen.getDisplayPanel().add(new JLabel("Disconnecting:"));
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run()
+            {
+                try {
+                    conn.close();
+                    connected = false;
+                    currentScreen.getDisplayPanel().add(new JLabel("disconnected"));
+                    System.out.println("Rozłączono z bazą danych");
+                } catch (SQLException ex) {
+                    currentScreen.getDisplayPanel().add(new JLabel("failed"));
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                body.updateUI();
+            }
+        });
     }
 
     public void doAnything() {
-        try (CallableStatement stmt = conn.prepareCall("{? = call PracNazw(?,?)}")){
-            stmt.setInt(2, 100);
-            stmt.registerOutParameter(1, Types.INTEGER);
-            stmt.registerOutParameter(3, Types.VARCHAR);
-            stmt.execute();
-            if(stmt.getInt(1)==1) {
-                System.out.println("Done: " + stmt.getString(3));
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run()
+            {
+                try (CallableStatement stmt = conn.prepareCall("{? = call PracNazw(?,?)}")){
+                    stmt.setInt(2, 100);
+                    stmt.registerOutParameter(1, Types.INTEGER);
+                    stmt.registerOutParameter(3, Types.VARCHAR);
+                    stmt.execute();
+                    if(stmt.getInt(1)==1) {
+                        System.out.println("Done: " + stmt.getString(3));
+                    }
+                    else {
+                        System.out.println("Err...");
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+                }
+                body.updateUI();
             }
-            else {
-                System.out.println("Err...");
-            }
-        } catch (SQLException ex) {
-            System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-        }
+        });
     }
 
     public void switchCurrentScreenTo(BodyScreen scr) {
