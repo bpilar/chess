@@ -33,20 +33,18 @@ public class AppWindow extends JFrame implements ActionListener {
         mainContentPane = mainFrame.getContentPane();
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.setSize(width,height);
-        mainFrame.setLayout(new GridBagLayout());
+        mainFrame.setLayout(new BorderLayout());
         header = new JPanel();
         body = new JPanel();
         header.setBorder(BorderFactory.createEtchedBorder());
         body.setBorder(BorderFactory.createEtchedBorder());
-        header.setLayout(new FlowLayout());
+        header.setLayout(new BorderLayout());
         body.setLayout(new GridBagLayout());
 
-        mainContentPane.add(header, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.1,
-                GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        mainContentPane.add(body, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.9,
-                GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        mainContentPane.add(BorderLayout.NORTH,header);
+        mainContentPane.add(BorderLayout.CENTER,body);
         quitButton.addActionListener(this);
-        header.add(quitButton);
+        header.add(BorderLayout.CENTER,quitButton);
         mainFrame.setVisible(true);
 
             System.out.println("Created AppWindow");

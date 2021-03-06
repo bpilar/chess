@@ -55,6 +55,9 @@ public class LoginScreen implements BodyScreen, ActionListener {
                 inputPassword += pass;
             }
 
+            loginField.setText("");
+            passwordField.setText("");
+
             try (Statement stmt = parent.conn.createStatement();
                  ResultSet rs = stmt.executeQuery("SELECT Haslo, Typ FROM Uzytkownicy WHERE Nazwa_uzy='" + inputLogin + "'");) {
                 if (rs.next()) {
