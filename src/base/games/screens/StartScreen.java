@@ -14,18 +14,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StartScreen implements BodyScreen, ActionListener {
-    public JPanel displayPanel;
+    public JPanel displayPanel = new JPanel();
     public AppWindow parent;
     public BodyScreen previousScreen;
-    public JPanel snapCenterPanel;
+    public JPanel snapCenterPanel = new JPanel();
     public JButton startButton = new JButton("Continue");
     public JButton reconnectButton = new JButton("Reconnect");
     public StartScreen(AppWindow app, BodyScreen previous) {
         parent = app;
         previousScreen = previous;
-        displayPanel = new JPanel();
         displayPanel.setBackground(Color.GRAY);
-        snapCenterPanel = new JPanel();
         snapCenterPanel.setLayout(new BoxLayout(snapCenterPanel, BoxLayout.PAGE_AXIS));
         displayPanel.add(snapCenterPanel);
         startButton.addActionListener(this);
@@ -55,7 +53,7 @@ public class StartScreen implements BodyScreen, ActionListener {
                     snapCenterPanel.add(new JLabel("failed"));
                     snapCenterPanel.add(reconnectButton);
                     System.out.println("Nie połączono z bazą danych");
-//                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Nie udało się połączyć z bazą danych", ex);
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Nie udało się połączyć z bazą danych", ex);
                     //System.exit(-1);
                 }
                 parent.body.updateUI();

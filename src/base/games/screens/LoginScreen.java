@@ -11,24 +11,19 @@ import java.util.Objects;
 import java.sql.*;
 
 public class LoginScreen implements BodyScreen, ActionListener {
-    public JPanel displayPanel;
+    public JPanel displayPanel = new JPanel();
     public AppWindow parent;
     public BodyScreen previousScreen;
-    public JPanel snapCenterPanel;
-    public JTextField loginField;
-    public JPasswordField passwordField;
-    public JButton loginButton;
+    public JPanel snapCenterPanel = new JPanel();
+    public JTextField loginField = new JTextField();
+    public JPasswordField passwordField = new JPasswordField();
+    public JButton loginButton = new JButton("Zaloguj");
     public LoginScreen(AppWindow app, BodyScreen previous) {
         parent = app;
         previousScreen = previous;
-        displayPanel = new JPanel();
         displayPanel.setBackground(Color.BLUE);
-        snapCenterPanel = new JPanel();
         snapCenterPanel.setLayout(new GridLayout(3,2));
         displayPanel.add(snapCenterPanel);
-        loginField = new JTextField();
-        passwordField = new JPasswordField();
-        loginButton = new JButton("Zaloguj");
         loginButton.addActionListener(this);
         snapCenterPanel.add(new JLabel("Użytkownik"));
         snapCenterPanel.add(loginField);

@@ -8,15 +8,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CoachScreen implements BodyScreen, ActionListener {
-    public JPanel displayPanel;
+    public JPanel displayPanel = new JPanel();
     public AppWindow parent;
     public BodyScreen previousScreen;
+    public JButton returnButton = new JButton("RETURN");
+    public JPanel centerPanel = new JPanel();
     public CoachScreen(AppWindow app, BodyScreen previous) {
         parent = app;
         previousScreen = previous;
-        displayPanel = new JPanel();
-        displayPanel.add(new JLabel("coach panel"));
-        displayPanel.setBackground(Color.CYAN);
+        displayPanel.setLayout(new BorderLayout());
+        returnButton.addActionListener(this);
+        displayPanel.add(BorderLayout.SOUTH,returnButton);
+        displayPanel.add(BorderLayout.CENTER,centerPanel);
+        centerPanel.add(new JLabel("coach panel"));
+        centerPanel.setBackground(Color.CYAN);
 
     }
 
@@ -34,6 +39,9 @@ public class CoachScreen implements BodyScreen, ActionListener {
     public void actionPerformed(ActionEvent event) {
         Object object = event.getSource();
 
-
+        if (object == returnButton)
+        {
+            parent.switchCurrentScreenTo(previousScreen);
+        }
     }
 }

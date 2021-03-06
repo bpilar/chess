@@ -53,7 +53,7 @@ public class AppWindow extends JFrame implements ActionListener {
 
         switchCurrentScreenTo(new StartScreen(this, currentScreen));
 
-        doAnything();
+//        doAnything();
     }
 
     public void disconnectOracle() {
