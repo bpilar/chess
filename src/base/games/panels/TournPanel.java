@@ -2,7 +2,9 @@ package base.games.panels;
 
 import base.games.AppWindow;
 import base.games.screens.BodyScreen;
+import base.games.screens.PlayerTournScreen;
 import base.games.screens.TemplateScreen;
+import base.games.screens.TournMatchScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +22,7 @@ public class TournPanel extends JPanel implements ActionListener {
         previousScreen = previous;
         tur_id = t_id;
         setLayout(new GridLayout(1,8));
-        setMaximumSize(new Dimension(AppWindow.width,30));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE,30));
         add(new JLabel(t_nazwa));
         add(new JLabel(t_data));
         add(new JLabel(t_miejsce));
@@ -38,8 +40,7 @@ public class TournPanel extends JPanel implements ActionListener {
 
         if (object == chooseButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,previousScreen));
-            //TODO proper screen
+            parent.switchCurrentScreenTo(new TournMatchScreen(parent,previousScreen,tur_id,((PlayerTournScreen)previousScreen).zaw_id));
         }
     }
 }
