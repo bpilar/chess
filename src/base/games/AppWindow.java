@@ -97,11 +97,16 @@ public class AppWindow extends JFrame implements ActionListener {
     }
 
     public void switchCurrentScreenTo(BodyScreen scr) {
-        body.removeAll();
-        body.add(scr.getDisplayPanel(), new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
-                GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        currentScreen = scr;
-        body.updateUI();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run()
+            {
+                body.removeAll();
+                body.add(scr.getDisplayPanel(), new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                        GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+                currentScreen = scr;
+                body.updateUI();
+            }
+        });
     }
 
     @Override
