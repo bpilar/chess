@@ -15,13 +15,15 @@ public class PlayerScreen implements BodyScreen, ActionListener {
     public JPanel displayPanel = new JPanel();
     public AppWindow parent;
     public BodyScreen previousScreen;
+    public String zaw_id;
     public JButton returnButton = new JButton("RETURN");
     public JPanel centerPanel = new JPanel();
     public JPanel snapCenterPanel = new JPanel();
     public JButton tournButton = new JButton("Turnieje");
-    public PlayerScreen(AppWindow app, BodyScreen previous, String zaw_id) {
+    public PlayerScreen(AppWindow app, BodyScreen previous, String id) {
         parent = app;
         previousScreen = previous;
+        zaw_id = id;
         displayPanel.setLayout(new BorderLayout());
         returnButton.addActionListener(this);
         displayPanel.add(BorderLayout.SOUTH,returnButton);
@@ -29,7 +31,7 @@ public class PlayerScreen implements BodyScreen, ActionListener {
         snapCenterPanel.setLayout(new BoxLayout(snapCenterPanel, BoxLayout.PAGE_AXIS));
         centerPanel.add(snapCenterPanel);
         tournButton.addActionListener(this);
-        try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+        try (Statement stmt = parent.conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT z.imie, z.nazwisko, z.narodowosc, z.punkty, k.nazwa, k.miejsca_nazwa FROM zawodnicy z JOIN kluby k " +
                      "ON z.kluby_nazwa=k.nazwa WHERE z.zaw_id = " + zaw_id)) {
             if (rs.next()) {
@@ -67,7 +69,7 @@ public class PlayerScreen implements BodyScreen, ActionListener {
         }
         if (object == tournButton)
         {
-            parent.switchCurrentScreenTo(new PlayerTournScreen(parent,this));
+            parent.switchCurrentScreenTo(new PlayerTournScreen(parent,this,zaw_id));
         }
     }
 }

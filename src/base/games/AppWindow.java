@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AppWindow extends JFrame implements ActionListener {
-    public static int width = 400;
+    public static int width = 600;
     public static int height = 400;
 
     public JFrame mainFrame;
