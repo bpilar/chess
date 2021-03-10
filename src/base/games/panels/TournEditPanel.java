@@ -2,13 +2,12 @@ package base.games.panels;
 
 import base.games.AppWindow;
 import base.games.screens.BodyScreen;
-import base.games.screens.PlayerTournScreen;
-import base.games.screens.TournMatchScreen;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 
 public class TournEditPanel extends JPanel implements ActionListener {
     public AppWindow parent;
@@ -37,7 +36,12 @@ public class TournEditPanel extends JPanel implements ActionListener {
 
         if (object == summarizeButton)
         {
-            System.out.println("Podsumuj turniej " + tur_id);//TODO----------------------
+            try (CallableStatement stmt = parent.conn.prepareCall("{call PodsumujTurniej(?)}")){
+                stmt.setString(1, tur_id);
+                stmt.execute();
+            } catch (SQLException ex) {
+                System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+            }
         }
     }
 }
