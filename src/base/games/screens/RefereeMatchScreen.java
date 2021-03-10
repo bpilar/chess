@@ -35,7 +35,7 @@ public class RefereeMatchScreen implements BodyScreen, ActionListener {
         try (Statement stmt = parent.conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT TO_CHAR(m.data,'YYYY-MM-DD') AS dzien, zb.imie, zb.nazwisko, zc.imie, zc.nazwisko, m.id_meczu, m.wynik_meczu " +
                      "FROM mecze m, zawodnicy zb, zawodnicy zc " +
-                     "WHERE m.zaw_id_b=zb.zaw_id AND m.zaw_id_c=zc.zaw_id AND m.sed_id=1")) {
+                     "WHERE m.zaw_id_b=zb.zaw_id AND m.zaw_id_c=zc.zaw_id AND m.sed_id=" + sed_id + "ORDER BY dzien")) {
             while (rs.next()) {
                 scrolledPanel.add(new MatchEditPanel(parent, this,
                         rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
