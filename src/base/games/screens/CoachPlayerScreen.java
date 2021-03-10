@@ -1,7 +1,7 @@
 package base.games.screens;
 
 import base.games.AppWindow;
-import base.games.panels.MatchPanel;
+import base.games.panels.PlayerPanel;
 import base.games.panels.TournPanel;
 
 import javax.swing.*;
@@ -12,21 +12,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class TournMatchScreen implements BodyScreen, ActionListener {
+public class CoachPlayerScreen implements BodyScreen, ActionListener {
     public JPanel displayPanel = new JPanel();
     public AppWindow parent;
     public BodyScreen previousScreen;
-    public String tur_id;
-    public String zaw_id;
+    public String tre_id;
     public JButton returnButton = new JButton("RETURN");
     public JPanel centerPanel = new JPanel();
     public JScrollPane scrollPane;
     public JPanel scrolledPanel = new JPanel();
-    public TournMatchScreen(AppWindow app, BodyScreen previous, String t_id, String z_id) {
+    public CoachPlayerScreen(AppWindow app, BodyScreen previous, String id) {
         parent = app;
         previousScreen = previous;
-        tur_id = t_id;
-        zaw_id = z_id;
+        tre_id = id;
         displayPanel.setLayout(new BorderLayout());
         returnButton.addActionListener(this);
         displayPanel.add(BorderLayout.SOUTH,returnButton);
@@ -36,17 +34,10 @@ public class TournMatchScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT TO_CHAR(m.data,'YYYY-MM-DD') AS dzien, zb.imie, zb.nazwisko, zc.imie, zc.nazwisko, m.wynik_meczu, s.imie, s.nazwisko " +
-                     "FROM mecze m, zawodnicy zb, zawodnicy zc, sedziowie s " +
-                     "WHERE m.zaw_id_b=zb.zaw_id AND m.zaw_id_c=zc.zaw_id AND m.sed_id=s.sed_id AND m.tur_id=" + tur_id + " AND m.zaw_id_b=" + zaw_id +
-                     " UNION ALL SELECT " +
-                     "TO_CHAR(m.data,'YYYY-MM-DD') AS dzien, zb.imie, zb.nazwisko, zc.imie, zc.nazwisko, m.wynik_meczu, s.imie, s.nazwisko " +
-                     "FROM mecze m, zawodnicy zb, zawodnicy zc, sedziowie s " +
-                     "WHERE m.zaw_id_b=zb.zaw_id AND m.zaw_id_c=zc.zaw_id AND m.sed_id=s.sed_id AND m.tur_id=" + tur_id + " AND m.zaw_id_c=" + zaw_id + " ORDER BY dzien")) {
+             ResultSet rs = stmt.executeQuery("SELECT zaw_id, imie, nazwisko, narodowosc, punkty FROM zawodnicy WHERE tre_id=" + tre_id + " ORDER BY nazwisko, imie")) {
             while (rs.next()) {
-                scrolledPanel.add(new MatchPanel(parent,
-                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
-                        rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+                scrolledPanel.add(new PlayerPanel(parent,this,
+                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5)));
             }
         } catch (SQLException ex) {
             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -57,15 +48,12 @@ public class TournMatchScreen implements BodyScreen, ActionListener {
     static class heading extends JPanel {
         public heading() {
             super();
-            setLayout(new GridLayout(1,8));
+            setLayout(new GridLayout(1,5));
             setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-            add(new JLabel("Data"));
-            add(new JLabel("Białe"));
-            add(new JLabel(""));
-            add(new JLabel("Czarne"));
-            add(new JLabel(""));
-            add(new JLabel("Wynik"));
-            add(new JLabel("Sędzia"));
+            add(new JLabel("Imię"));
+            add(new JLabel("Nazwisko"));
+            add(new JLabel("Narodowosc"));
+            add(new JLabel("Punkty"));
             add(new JLabel(""));
         }
     }
