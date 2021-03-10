@@ -67,11 +67,11 @@ public class RefereeScreen implements BodyScreen, ActionListener {
         }
         if (object == matchButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new RefereeMatchScreen(parent,this,sed_id));
         }
         if (object == tournButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//TODO
         }
     }
 }
