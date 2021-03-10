@@ -70,7 +70,7 @@ public class LoginScreen implements BodyScreen, ActionListener {
                                 parent.switchCurrentScreenTo(new CoachScreen(parent,this,rs.getString(5)));
                                 break;
                             case "SED":
-                                parent.switchCurrentScreenTo(new RefereeScreen(parent,this));
+                                parent.switchCurrentScreenTo(new RefereeScreen(parent,this,rs.getString(4)));
                                 break;
                             case "ADM":
                                 parent.switchCurrentScreenTo(new AdminScreen(parent,this));
