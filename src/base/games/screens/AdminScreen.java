@@ -1,6 +1,7 @@
 package base.games.screens;
 
 import base.games.AppWindow;
+import base.games.admin.screens.AdmSeasonScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +72,7 @@ public class AdminScreen implements BodyScreen, ActionListener {
         }
         if (object == seasonButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//1
+            parent.switchCurrentScreenTo(new AdmSeasonScreen(parent,this));
         }
         if (object == tournButton)
         {
