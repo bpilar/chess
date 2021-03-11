@@ -71,7 +71,7 @@ public class RefereeScreen implements BodyScreen, ActionListener {
         }
         if (object == tournButton)
         {
-            parent.switchCurrentScreenTo(new RefereeTournScreen(parent,this,sed_id));//TODO
+            parent.switchCurrentScreenTo(new RefereeTournScreen(parent,this,sed_id));
         }
     }
 }

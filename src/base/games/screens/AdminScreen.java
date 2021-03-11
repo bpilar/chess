@@ -13,6 +13,15 @@ public class AdminScreen implements BodyScreen, ActionListener {
     public BodyScreen previousScreen;
     public JButton returnButton = new JButton("RETURN");
     public JPanel centerPanel = new JPanel();
+    public JPanel snapCenterPanel = new JPanel();
+    public JButton seasonButton = new JButton("Sezony");
+    public JButton tournButton = new JButton("Turnieje");
+    public JButton clubButton = new JButton("Kluby");
+    public JButton placeButton = new JButton("Miejsca");
+    public JButton playersButton = new JButton("Zawodnicy");
+    public JButton coachButton = new JButton("Trenerzy");
+    public JButton refereeButton = new JButton("Sędziowie");
+    public JButton userButton = new JButton("Użytkownicy");
     public AdminScreen(AppWindow app, BodyScreen previous) {
         parent = app;
         previousScreen = previous;
@@ -20,8 +29,27 @@ public class AdminScreen implements BodyScreen, ActionListener {
         returnButton.addActionListener(this);
         displayPanel.add(BorderLayout.SOUTH,returnButton);
         displayPanel.add(BorderLayout.CENTER,centerPanel);
-        centerPanel.add(new JLabel("admin panel"));
-        centerPanel.setBackground(Color.YELLOW);
+        snapCenterPanel.setLayout(new BoxLayout(snapCenterPanel, BoxLayout.PAGE_AXIS));
+        centerPanel.add(snapCenterPanel);
+        seasonButton.addActionListener(this);
+        tournButton.addActionListener(this);
+        clubButton.addActionListener(this);
+        placeButton.addActionListener(this);
+        playersButton.addActionListener(this);
+        coachButton.addActionListener(this);
+        refereeButton.addActionListener(this);
+        userButton.addActionListener(this);
+        //TODO
+        snapCenterPanel.add(new JLabel("wybierz funkcjonalność"));
+        snapCenterPanel.add(seasonButton);
+        snapCenterPanel.add(tournButton);
+        snapCenterPanel.add(clubButton);
+        snapCenterPanel.add(placeButton);
+        snapCenterPanel.add(playersButton);
+        snapCenterPanel.add(coachButton);
+        snapCenterPanel.add(refereeButton);
+        snapCenterPanel.add(userButton);
+        //TODO
 
     }
 
@@ -43,5 +71,34 @@ public class AdminScreen implements BodyScreen, ActionListener {
         {
             parent.switchCurrentScreenTo(previousScreen);
         }
+        if (object == seasonButton)
+        {
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+        }
+        if (object == tournButton)
+        {
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+        }
+        if (object == clubButton)
+        {
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+        }
+        if (object == playersButton)
+        {
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+        }
+        if (object == coachButton)
+        {
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+        }
+        if (object == refereeButton)
+        {
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+        }
+        if (object == userButton)
+        {
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+        }
+        //TODO
     }
 }
