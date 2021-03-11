@@ -41,8 +41,8 @@ public class StartScreen implements BodyScreen, ActionListener {
                 String connectionString = "jdbc:oracle:thin:@//admlab2.cs.put.poznan.pl:1521/"
                         +"dblab02_students.cs.put.poznan.pl";
                 Properties connectionProps = new Properties();
-                connectionProps.put("user", "inf141300");
-                connectionProps.put("password", "inf141300");
+                connectionProps.put("user", "inf141319");
+                connectionProps.put("password", "inf141319");
                 try {
                     parent.conn = DriverManager.getConnection(connectionString,connectionProps);
                     parent.connected = true;
