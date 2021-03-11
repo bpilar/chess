@@ -39,7 +39,6 @@ public class AdminScreen implements BodyScreen, ActionListener {
         coachButton.addActionListener(this);
         refereeButton.addActionListener(this);
         userButton.addActionListener(this);
-        //TODO
         snapCenterPanel.add(new JLabel("wybierz funkcjonalność"));
         snapCenterPanel.add(seasonButton);
         snapCenterPanel.add(tournButton);
@@ -49,7 +48,6 @@ public class AdminScreen implements BodyScreen, ActionListener {
         snapCenterPanel.add(coachButton);
         snapCenterPanel.add(refereeButton);
         snapCenterPanel.add(userButton);
-        //TODO
 
     }
 
@@ -73,32 +71,31 @@ public class AdminScreen implements BodyScreen, ActionListener {
         }
         if (object == seasonButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//1
         }
         if (object == tournButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//2
         }
         if (object == clubButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//3
         }
         if (object == playersButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//4
         }
         if (object == coachButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//5
         }
         if (object == refereeButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//6
         }
         if (object == userButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));
+            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//7
         }
-        //TODO
     }
 }
