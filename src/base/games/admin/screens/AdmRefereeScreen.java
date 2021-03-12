@@ -70,7 +70,7 @@ public class AdmRefereeScreen implements BodyScreen, ActionListener {
             uzyBox.addItem(new Item<String>("nowrite", ""));
             uzyBox.addItem(new Item<String>("NULL", "NULL"));
             try (Statement stmt = parent.conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT uzy_id, nazwa_uzy FROM uzytkownicy ORDER BY nazwa_uzy")) {
+                 ResultSet rs = stmt.executeQuery("SELECT uzy_id, nazwa_uzy FROM uzytkownicy WHERE typ='SED' AND uzy_id NOT IN (SELECT uzy_id FROM sedziowie WHERE uzy_id IS NOT NULL)")) {
                 while (rs.next()) {
                     uzyBox.addItem(new Item<String>(rs.getString(1), rs.getString(2)));
                 }

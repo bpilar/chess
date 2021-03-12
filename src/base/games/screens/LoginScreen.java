@@ -64,13 +64,46 @@ public class LoginScreen implements BodyScreen, ActionListener {
                     if (Objects.equals(inputPassword, rs.getString(1))) {
                         switch (rs.getString(2)) {
                             case "ZAW":
-                                parent.switchCurrentScreenTo(new PlayerScreen(parent,this, rs.getString(6)));
+                                try (Statement stmt2 = parent.conn.createStatement();
+                                     ResultSet rs2 = stmt2.executeQuery("SELECT zaw_id FROM zawodnicy WHERE uzy_id=" + rs.getString(3));) {
+                                    if (rs2.next()) {
+                                        parent.switchCurrentScreenTo(new PlayerScreen(parent,this, rs2.getString(1)));
+                                    }
+                                    else
+                                    {
+                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                                    }
+                                } catch (SQLException ex) {
+                                    System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+                                }
                                 break;
                             case "TRE":
-                                parent.switchCurrentScreenTo(new CoachScreen(parent,this,rs.getString(5)));
+                                try (Statement stmt2 = parent.conn.createStatement();
+                                     ResultSet rs2 = stmt2.executeQuery("SELECT tre_id FROM trenerzy WHERE uzy_id=" + rs.getString(3));) {
+                                    if (rs2.next()) {
+                                        parent.switchCurrentScreenTo(new CoachScreen(parent,this, rs2.getString(1)));
+                                    }
+                                    else
+                                    {
+                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                                    }
+                                } catch (SQLException ex) {
+                                    System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+                                }
                                 break;
                             case "SED":
-                                parent.switchCurrentScreenTo(new RefereeScreen(parent,this,rs.getString(4)));
+                                try (Statement stmt2 = parent.conn.createStatement();
+                                     ResultSet rs2 = stmt2.executeQuery("SELECT sed_id FROM sedziowie WHERE uzy_id=" + rs.getString(3));) {
+                                    if (rs2.next()) {
+                                        parent.switchCurrentScreenTo(new RefereeScreen(parent,this, rs2.getString(1)));
+                                    }
+                                    else
+                                    {
+                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                                    }
+                                } catch (SQLException ex) {
+                                    System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+                                }
                                 break;
                             case "ADM":
                                 parent.switchCurrentScreenTo(new AdminScreen(parent,this));
