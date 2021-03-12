@@ -3,6 +3,7 @@ package base.games.screens;
 import base.games.AppWindow;
 import base.games.admin.screens.AdmClubScreen;
 import base.games.admin.screens.AdmPlaceScreen;
+import base.games.admin.screens.AdmRefereeScreen;
 import base.games.admin.screens.AdmSeasonScreen;
 
 import javax.swing.*;
@@ -98,7 +99,7 @@ public class AdminScreen implements BodyScreen, ActionListener {
         }
         if (object == refereeButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//6
+            parent.switchCurrentScreenTo(new AdmRefereeScreen(parent,this));
         }
         if (object == userButton)
         {
