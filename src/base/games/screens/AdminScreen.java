@@ -88,7 +88,7 @@ public class AdminScreen implements BodyScreen, ActionListener {
         }
         if (object == playersButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//4
+            parent.switchCurrentScreenTo(new AdmPlayerScreen(parent,this));
         }
         if (object == coachButton)
         {

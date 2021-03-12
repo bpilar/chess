@@ -2,7 +2,7 @@ package base.games.admin.screens;
 
 import base.games.AppWindow;
 import base.games.Item;
-import base.games.admin.panels.AdmCoachPanel;
+import base.games.admin.panels.AdmPlayerPanel;
 import base.games.screens.BodyScreen;
 import base.games.screens.ErrorScreen;
 
@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class AdmCoachScreen implements BodyScreen, ActionListener {
+public class AdmPlayerScreen implements BodyScreen, ActionListener {
     public JPanel displayPanel = new JPanel();
     public AppWindow parent;
     public BodyScreen previousScreen;
@@ -23,12 +23,14 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
     public inputPanel inputpanel;
     public JTextField nameField = new JTextField();
     public JTextField surnameField = new JTextField();
+    public JTextField nationField = new JTextField();
     public JComboBox<Item<String>> uzyBox = new JComboBox<Item<String>>();
     public JComboBox<Item<String>> kluBox = new JComboBox<Item<String>>();
+    public JComboBox<Item<String>> treBox = new JComboBox<Item<String>>();
     public JButton insertButton = new JButton("Wstaw");
     public JScrollPane scrollPane;
     public JPanel scrolledPanel = new JPanel();
-    public AdmCoachScreen(AppWindow app, BodyScreen previous) {
+    public AdmPlayerScreen(AppWindow app, BodyScreen previous) {
         parent = app;
         previousScreen = previous;
         displayPanel.setLayout(new BorderLayout());
@@ -45,10 +47,12 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT t.tre_id, t.imie, t.nazwisko, t.uzy_id, u.nazwa_uzy, k.nazwa FROM trenerzy t, uzytkownicy u, kluby k WHERE t.uzy_id=u.uzy_id(+) AND k.nazwa=t.kluby_nazwa ORDER BY t.nazwisko,t.imie")) {
+             ResultSet rs = stmt.executeQuery("SELECT z.zaw_id, z.imie, z.nazwisko, z.narodowosc, z.uzy_id, u.nazwa_uzy, k.nazwa, z.tre_id, t.imie || ' ' || t.nazwisko " +
+                     "FROM zawodnicy z, uzytkownicy u, kluby k, trenerzy t WHERE z.uzy_id=u.uzy_id(+) AND k.nazwa=z.kluby_nazwa AND t.tre_id=z.tre_id ORDER BY z.nazwisko,z.imie")) {
             while (rs.next()) {
-                scrolledPanel.add(new AdmCoachPanel(parent,this,
-                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6)));
+                scrolledPanel.add(new AdmPlayerPanel(parent,this,
+                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),
+                        rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
             }
         } catch (SQLException ex) {
             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -59,19 +63,22 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
     class inputPanel extends JPanel {
         public inputPanel() {
             super();
-            setLayout(new GridLayout(2,5));
+            setLayout(new GridLayout(2,7));
             setMaximumSize(new Dimension(Integer.MAX_VALUE,60));
             add(new JLabel("Imię"));
             add(new JLabel("Nazwisko"));
+            add(new JLabel("Narodowosc"));
             add(new JLabel("Użytkownik"));
             add(new JLabel("Klub"));
+            add(new JLabel("Trener"));
             add(new JLabel(""));
             add(nameField);
             add(surnameField);
+            add(nationField);
             uzyBox.addItem(new Item<String>("nowrite", ""));
             uzyBox.addItem(new Item<String>("NULL", "-brak-"));
             try (Statement stmt = parent.conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT uzy_id, nazwa_uzy FROM uzytkownicy WHERE typ='TRE' AND uzy_id NOT IN (SELECT uzy_id FROM trenerzy WHERE uzy_id IS NOT NULL)")) {
+                 ResultSet rs = stmt.executeQuery("SELECT uzy_id, nazwa_uzy FROM uzytkownicy WHERE typ='ZAW' AND uzy_id NOT IN (SELECT uzy_id FROM zawodnicy WHERE uzy_id IS NOT NULL)")) {
                 while (rs.next()) {
                     uzyBox.addItem(new Item<String>(rs.getString(1), rs.getString(2)));
                 }
@@ -89,6 +96,16 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
             }
             add(kluBox);
+            treBox.addItem(new Item<String>("nowrite", ""));
+            try (Statement stmt = parent.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT tre_id, imie || ' ' || nazwisko FROM trenerzy")) {
+                while (rs.next()) {
+                    treBox.addItem(new Item<String>(rs.getString(1), rs.getString(2)));
+                }
+            } catch (SQLException ex) {
+                System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+            }
+            add(treBox);
             add(insertButton);
         }
     }
@@ -96,12 +113,14 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
     static class heading extends JPanel {
         public heading() {
             super();
-            setLayout(new GridLayout(1,6));
+            setLayout(new GridLayout(1,8));
             setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
             add(new JLabel("Imię"));
             add(new JLabel("Nazwisko"));
+            add(new JLabel("Narodowosc"));
             add(new JLabel("Użytkownik"));
             add(new JLabel("Klub"));
+            add(new JLabel("Trener"));
             add(new JLabel(""));
             add(new JLabel(""));
         }
@@ -134,9 +153,13 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
                 Item klu_item = (Item) kluBox.getSelectedItem();
                 String klu_id = (String) klu_item.getValue();
                 if (klu_id == "nowrite") klu_id = "NULL";
-                int changes = stmt.executeUpdate("INSERT INTO trenerzy(imie,nazwisko,uzy_id,kluby_nazwa) VALUES ('" + nameField.getText() + "','" + surnameField.getText() + "'," + uzy_id + ",'" + klu_id + "')");
-                System.out.println("Wstawiono "+ changes + " trenerów");
-                parent.switchCurrentScreenTo(new AdmCoachScreen(parent,previousScreen));
+                Item tre_item = (Item) treBox.getSelectedItem();
+                String tre_id = (String) tre_item.getValue();
+                if (tre_id == "nowrite") tre_id = "NULL";
+                int changes = stmt.executeUpdate("INSERT INTO zawodnicy(imie,nazwisko,narodowosc,punkty,uzy_id,kluby_nazwa,tre_id) VALUES ('" +
+                        nameField.getText() + "','" + surnameField.getText() + "','" + nationField.getText() + "',0," + uzy_id + ",'" + klu_id + "'," + tre_id + ")");
+                System.out.println("Wstawiono "+ changes + " zawodników");
+                parent.switchCurrentScreenTo(new AdmPlayerScreen(parent,previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
                 parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
