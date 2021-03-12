@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 
 public class AdmRefereePanel extends JPanel implements ActionListener {
     public AppWindow parent;
@@ -19,16 +20,18 @@ public class AdmRefereePanel extends JPanel implements ActionListener {
     public String sed_id;
     public String sed_imie;
     public String sed_nazw;
+    public String uzy_id;
     public String uzy_nazwa;
     public JButton writeButton = new JButton("NADPISZ");
     public JButton deleteButton = new JButton("USUŃ");
-    public AdmRefereePanel(AppWindow app, AdmRefereeScreen previous, String s_id, String imie, String nazwisko, String uzytkownik) {
+    public AdmRefereePanel(AppWindow app, AdmRefereeScreen previous, String s_id, String imie, String nazwisko, String u_id, String uzytkownik) {
         super();
         parent = app;
         previousScreen = previous;
         sed_id = s_id;
         sed_imie = imie;
         sed_nazw = nazwisko;
+        uzy_id = u_id;
         uzy_nazwa = uzytkownik;
         setLayout(new GridLayout(1,5));
         setMaximumSize(new Dimension(Integer.MAX_VALUE,30));
@@ -52,8 +55,12 @@ public class AdmRefereePanel extends JPanel implements ActionListener {
             String newNazw = previousScreen.surnameField.getText();
             if (newNazw.length() == 0) newNazw = sed_nazw;
             Item uzy_item = (Item) previousScreen.uzyBox.getSelectedItem();
+            String newUzy_id = uzy_id;
+            System.out.println(uzy_item.toString());
+            if (!Objects.equals(uzy_item.toString(), "")) newUzy_id = (String) uzy_item.getValue();
+            System.out.println("UPDATE sedziowie SET imie='" + newImie + "', nazwisko='" + newNazw + "', uzy_id=" + newUzy_id + " WHERE sed_id=" + sed_id);
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
-                int changes = stmt.executeUpdate("UPDATE sedziowie SET imie='" + newImie + "', nazwisko='" + newNazw + "', uzy_id=" + uzy_item.getValue() + " WHERE sed_id=" + sed_id);
+                int changes = stmt.executeUpdate("UPDATE sedziowie SET imie='" + newImie + "', nazwisko='" + newNazw + "', uzy_id=" + newUzy_id + " WHERE sed_id=" + sed_id);
                 System.out.println("Zmieniono "+ changes + " sędziów");
                 parent.switchCurrentScreenTo(new AdmRefereeScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {

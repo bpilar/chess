@@ -45,10 +45,10 @@ public class AdmRefereeScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT s.sed_id, s.imie, s.nazwisko, u.nazwa_uzy FROM sedziowie s, uzytkownicy u WHERE s.uzy_id=u.uzy_id(+) ORDER BY s.nazwisko,s.imie")) {
+             ResultSet rs = stmt.executeQuery("SELECT s.sed_id, s.imie, s.nazwisko, s.uzy_id, u.nazwa_uzy FROM sedziowie s, uzytkownicy u WHERE s.uzy_id=u.uzy_id(+) ORDER BY s.nazwisko,s.imie")) {
             while (rs.next()) {
                 scrolledPanel.add(new AdmRefereePanel(parent,this,
-                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5)));
             }
         } catch (SQLException ex) {
             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -67,7 +67,8 @@ public class AdmRefereeScreen implements BodyScreen, ActionListener {
             add(new JLabel(""));
             add(nameField);
             add(surnameField);
-            uzyBox.addItem(new Item<String>("NULL", "-brak-"));
+            uzyBox.addItem(new Item<String>("nowrite", ""));
+            uzyBox.addItem(new Item<String>("NULL", "NULL"));
             try (Statement stmt = parent.conn.createStatement();
                  ResultSet rs = stmt.executeQuery("SELECT uzy_id, nazwa_uzy FROM uzytkownicy ORDER BY nazwa_uzy")) {
                 while (rs.next()) {
@@ -117,7 +118,9 @@ public class AdmRefereeScreen implements BodyScreen, ActionListener {
         {
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
                 Item uzy_item = (Item) uzyBox.getSelectedItem();
-                int changes = stmt.executeUpdate("INSERT INTO sedziowie(imie,nazwisko,uzy_id) VALUES ('" + nameField.getText() + "','" + surnameField.getText() + "'," + uzy_item.getValue() + ")");
+                String uzy_id = (String) uzy_item.getValue();
+                if (uzy_id == "nowrite") uzy_id = "NULL";
+                int changes = stmt.executeUpdate("INSERT INTO sedziowie(imie,nazwisko,uzy_id) VALUES ('" + nameField.getText() + "','" + surnameField.getText() + "'," + uzy_id + ")");
                 System.out.println("Wstawiono "+ changes + " sędziów");
                 parent.switchCurrentScreenTo(new AdmRefereeScreen(parent,previousScreen));
             } catch (SQLException ex) {
