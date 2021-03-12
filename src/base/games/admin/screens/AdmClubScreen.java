@@ -1,7 +1,7 @@
 package base.games.admin.screens;
 
 import base.games.AppWindow;
-import base.games.admin.panels.AdmPlacePanel;
+import base.games.admin.panels.AdmClubPanel;
 import base.games.screens.BodyScreen;
 import base.games.screens.ErrorScreen;
 
@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class AdmPlaceScreen implements BodyScreen, ActionListener {
+public class AdmClubScreen implements BodyScreen, ActionListener {
     public JPanel displayPanel = new JPanel();
     public AppWindow parent;
     public BodyScreen previousScreen;
@@ -21,11 +21,11 @@ public class AdmPlaceScreen implements BodyScreen, ActionListener {
     public JPanel centerPanel = new JPanel();
     public inputPanel inputpanel;
     public JTextField nameField = new JTextField();
-    public JTextField addresField = new JTextField();
+    public JTextField placeField = new JTextField();
     public JButton insertButton = new JButton("Wstaw");
     public JScrollPane scrollPane;
     public JPanel scrolledPanel = new JPanel();
-    public AdmPlaceScreen(AppWindow app, BodyScreen previous) {
+    public AdmClubScreen(AppWindow app, BodyScreen previous) {
         parent = app;
         previousScreen = previous;
         displayPanel.setLayout(new BorderLayout());
@@ -42,9 +42,9 @@ public class AdmPlaceScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT nazwa, adres FROM miejsca ORDER BY nazwa")) {
+             ResultSet rs = stmt.executeQuery("SELECT nazwa, miejsca_nazwa FROM kluby ORDER BY nazwa")) {
             while (rs.next()) {
-                scrolledPanel.add(new AdmPlacePanel(parent,this,
+                scrolledPanel.add(new AdmClubPanel(parent,this,
                         rs.getString(1),rs.getString(2)));
             }
         } catch (SQLException ex) {
@@ -59,10 +59,10 @@ public class AdmPlaceScreen implements BodyScreen, ActionListener {
             setLayout(new GridLayout(2,3));
             setMaximumSize(new Dimension(Integer.MAX_VALUE,60));
             add(new JLabel("Nazwa"));
-            add(new JLabel("Adres"));
+            add(new JLabel("Miejsce"));
             add(new JLabel(""));
             add(nameField);
-            add(addresField);
+            add(placeField);
             add(insertButton);
         }
 
@@ -74,7 +74,7 @@ public class AdmPlaceScreen implements BodyScreen, ActionListener {
             setLayout(new GridLayout(1,4));
             setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
             add(new JLabel("Nazwa"));
-            add(new JLabel("Adres"));
+            add(new JLabel("Miejsce"));
             add(new JLabel(""));
             add(new JLabel(""));
         }
@@ -101,9 +101,9 @@ public class AdmPlaceScreen implements BodyScreen, ActionListener {
         if (object == insertButton)
         {
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
-                int changes = stmt.executeUpdate("INSERT INTO miejsca(nazwa,adres) VALUES ('" + nameField.getText() + "','" + addresField.getText() + "')");
-                System.out.println("Wstawiono "+ changes + " miejsc");
-                parent.switchCurrentScreenTo(new AdmPlaceScreen(parent,previousScreen));
+                int changes = stmt.executeUpdate("INSERT INTO kluby(nazwa,miejsca_nazwa) VALUES ('" + nameField.getText() + "','" + placeField.getText() + "')");
+                System.out.println("Wstawiono "+ changes + " klubów");
+                parent.switchCurrentScreenTo(new AdmClubScreen(parent,previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
                 parent.switchCurrentScreenTo(new ErrorScreen(parent,this));

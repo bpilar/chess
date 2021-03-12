@@ -1,6 +1,7 @@
 package base.games.screens;
 
 import base.games.AppWindow;
+import base.games.admin.screens.AdmClubScreen;
 import base.games.admin.screens.AdmPlaceScreen;
 import base.games.admin.screens.AdmSeasonScreen;
 
@@ -81,7 +82,7 @@ public class AdminScreen implements BodyScreen, ActionListener {
         }
         if (object == clubButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//3
+            parent.switchCurrentScreenTo(new AdmClubScreen(parent,this));
         }
         if (object == placeButton)
         {

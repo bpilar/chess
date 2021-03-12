@@ -43,7 +43,7 @@ public class AdmSeasonScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT sez_id, nazwa, TO_CHAR(rok,'YYYY') FROM sezony")) {
+             ResultSet rs = stmt.executeQuery("SELECT sez_id, nazwa, TO_CHAR(rok,'YYYY') AS rok FROM sezony ORDER BY rok,nazwa")) {
             while (rs.next()) {
                 scrolledPanel.add(new AdmSeasonPanel(parent,this,
                         rs.getString(1),rs.getString(2),rs.getString(3)));
