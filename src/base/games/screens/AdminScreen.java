@@ -100,7 +100,7 @@ public class AdminScreen implements BodyScreen, ActionListener {
         }
         if (object == userButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//7
+            parent.switchCurrentScreenTo(new AdmUserScreen(parent,this));
         }
     }
 }
