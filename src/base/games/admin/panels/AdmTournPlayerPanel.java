@@ -53,11 +53,11 @@ public class AdmTournPlayerPanel extends JPanel implements ActionListener {
                             parent.switchCurrentScreenTo(new AdmTournRefereeScreen(parent,previousScreen.previousScreen,tur_id));
                         } catch (SQLException ex) {
                             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                            parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                            parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"we just don't know"));
                         }
                     }
                     else {
-                        parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                        parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"ten zawodnik ma przypisane mecze w tym turnieju"));
                     }
                 }
             } catch (SQLException ex) {

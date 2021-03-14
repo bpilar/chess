@@ -13,15 +13,16 @@ public class ErrorScreen implements BodyScreen, ActionListener {
     public BodyScreen previousScreen;
     public JButton returnButton = new JButton("RETURN");
     public JPanel centerPanel = new JPanel();
-    public ErrorScreen(AppWindow app, BodyScreen previous) {
+    public ErrorScreen(AppWindow app, BodyScreen previous, String msg) {
         parent = app;
         previousScreen = previous;
         displayPanel.setLayout(new BorderLayout());
         returnButton.addActionListener(this);
         displayPanel.add(BorderLayout.SOUTH,returnButton);
         displayPanel.add(BorderLayout.CENTER,centerPanel);
-        centerPanel.add(new JLabel("ta operacja jest niepoprawna"));
-        centerPanel.setBackground(Color.GREEN);
+        centerPanel.add(new JLabel("ta operacja jest niepoprawna  "));
+        centerPanel.add(new JLabel(msg));
+        centerPanel.setBackground(Color.CYAN);
 
     }
 

@@ -2,15 +2,15 @@ package base.games.admin.panels;
 
 import base.games.AppWindow;
 import base.games.admin.screens.AdmSeasonScreen;
-import base.games.screens.BodyScreen;
 import base.games.screens.ErrorScreen;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.CallableStatement;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class AdmSeasonPanel extends JPanel implements ActionListener {
     public AppWindow parent;
@@ -53,7 +53,7 @@ public class AdmSeasonPanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmSeasonScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"niepoprawne dane"));
             }
         }
         if (object == deleteButton)
@@ -64,7 +64,7 @@ public class AdmSeasonPanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmSeasonScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"sezon nie jest pusty"));
             }
         }
     }

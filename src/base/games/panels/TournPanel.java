@@ -3,7 +3,6 @@ package base.games.panels;
 import base.games.AppWindow;
 import base.games.screens.BodyScreen;
 import base.games.screens.PlayerTournScreen;
-import base.games.screens.TemplateScreen;
 import base.games.screens.TournMatchScreen;
 
 import javax.swing.*;

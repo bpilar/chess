@@ -38,7 +38,7 @@ public class TournEditPanel extends JPanel implements ActionListener {
         if (object == summarizeButton)
         {
             try (Statement stmt2 = parent.conn.createStatement();
-                 ResultSet rs2 = stmt2.executeQuery("SELECT COUNT(*) FROM (SELECT * FROM udzialy WHERE wynik_w_turnieju IS NOT NULL AND tur_id=1)")) {
+                 ResultSet rs2 = stmt2.executeQuery("SELECT COUNT(*) FROM (SELECT * FROM udzialy WHERE wynik_w_turnieju IS NOT NULL AND tur_id=" + tur_id + ")")) {
                 if (rs2.next()) {
                     if (rs2.getInt(1) == 0) {
                         try (CallableStatement stmt = parent.conn.prepareCall("{call PodsumujTurniej(?)}")){
@@ -49,7 +49,7 @@ public class TournEditPanel extends JPanel implements ActionListener {
                         }
                     }
                     else {
-                        parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                        parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"turniej już raz podsumowano"));
                     }
                 }
             } catch (SQLException ex) {

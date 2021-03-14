@@ -58,7 +58,7 @@ public class AdmUserPanel extends JPanel implements ActionListener {
                     parent.switchCurrentScreenTo(new AdmUserScreen(parent,previousScreen.previousScreen));
                 } catch (SQLException ex) {
                     System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                    parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                    parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"niepoprawne dane"));
                 }
             }
             else {
@@ -82,7 +82,7 @@ public class AdmUserPanel extends JPanel implements ActionListener {
                     }
                 } catch (SQLException ex) {
                     System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                    parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                    parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"we just don't know"));
                 }
                 if(count == 0) {
                     try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
@@ -91,11 +91,11 @@ public class AdmUserPanel extends JPanel implements ActionListener {
                         parent.switchCurrentScreenTo(new AdmUserScreen(parent,previousScreen.previousScreen));
                     } catch (SQLException ex) {
                         System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                        parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                        parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"niepoprawne dane"));
                     }
                 }
                 else {
-                    parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                    parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"można zmienić typ tylko nieprzypisanym kontom"));
                 }
             }
         }
@@ -112,7 +112,7 @@ public class AdmUserPanel extends JPanel implements ActionListener {
                                 parent.switchCurrentScreenTo(new AdmUserScreen(parent,previousScreen.previousScreen));
                             }
                             else {
-                                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"nie można usunąć wszystkich administratorów"));
                             }
                         }
                     } catch (SQLException ex) {
@@ -133,7 +133,7 @@ public class AdmUserPanel extends JPanel implements ActionListener {
                 }
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"we just don't know"));
             }
         }
     }

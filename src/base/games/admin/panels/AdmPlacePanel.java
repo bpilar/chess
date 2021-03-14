@@ -49,7 +49,7 @@ public class AdmPlacePanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmPlaceScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"niepoprawne dane"));
             }
         }
         if (object == deleteButton)
@@ -60,7 +60,7 @@ public class AdmPlacePanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmPlaceScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"miejsce jest gidześ przypisane"));
             }
         }
     }

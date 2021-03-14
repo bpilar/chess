@@ -2,7 +2,6 @@ package base.games.admin.screens;
 
 import base.games.AppWindow;
 import base.games.admin.panels.AdmSeasonPanel;
-import base.games.panels.TournEditPanel;
 import base.games.screens.BodyScreen;
 import base.games.screens.ErrorScreen;
 
@@ -107,7 +106,7 @@ public class AdmSeasonScreen implements BodyScreen, ActionListener {
                 parent.switchCurrentScreenTo(new AdmSeasonScreen(parent,previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"niepoprawne dane"));
             }
         }
     }

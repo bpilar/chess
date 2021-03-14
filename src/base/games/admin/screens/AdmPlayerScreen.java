@@ -162,7 +162,7 @@ public class AdmPlayerScreen implements BodyScreen, ActionListener {
                 parent.switchCurrentScreenTo(new AdmPlayerScreen(parent,previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"niepoprawne dane"));
             }
         }
     }

@@ -63,7 +63,7 @@ public class AdmRefereePanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmRefereeScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"niepoprawne dane"));
             }
         }
         if (object == deleteButton)
@@ -74,7 +74,7 @@ public class AdmRefereePanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmRefereeScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"sędzia jest gdzieś przypisany"));
             }
         }
     }

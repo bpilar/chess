@@ -112,7 +112,7 @@ public class AdmUserScreen implements BodyScreen, ActionListener {
         {
             Item typ_item = (Item) typeBox.getSelectedItem();
             if (Objects.equals(typ_item.toString(), "")) {
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"musi mieć typ"));
             }
             else {
                 try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
@@ -122,7 +122,7 @@ public class AdmUserScreen implements BodyScreen, ActionListener {
                     parent.switchCurrentScreenTo(new AdmUserScreen(parent,previousScreen));
                 } catch (SQLException ex) {
                     System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                    parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                    parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"niepoprawne dane"));
                 }
             }
         }

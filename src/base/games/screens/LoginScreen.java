@@ -21,7 +21,7 @@ public class LoginScreen implements BodyScreen, ActionListener {
     public LoginScreen(AppWindow app, BodyScreen previous) {
         parent = app;
         previousScreen = previous;
-        displayPanel.setBackground(Color.BLUE);
+        displayPanel.setBackground(Color.lightGray);
         snapCenterPanel.setLayout(new GridLayout(3,2));
         displayPanel.add(snapCenterPanel);
         loginButton.addActionListener(this);
@@ -59,7 +59,7 @@ public class LoginScreen implements BodyScreen, ActionListener {
             passwordField.setText("");
 
             try (Statement stmt = parent.conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT Haslo, Typ, uzy_id, sed_id, tre_id, zaw_id FROM Uzytkownicy WHERE Nazwa_uzy='" + inputLogin + "'");) {
+                 ResultSet rs = stmt.executeQuery("SELECT Haslo, Typ, uzy_id FROM Uzytkownicy WHERE Nazwa_uzy='" + inputLogin + "'");) {
                 if (rs.next()) {
                     if (Objects.equals(inputPassword, rs.getString(1))) {
                         switch (rs.getString(2)) {
@@ -71,7 +71,7 @@ public class LoginScreen implements BodyScreen, ActionListener {
                                     }
                                     else
                                     {
-                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"brak przypisanego konta"));
                                     }
                                 } catch (SQLException ex) {
                                     System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -85,7 +85,7 @@ public class LoginScreen implements BodyScreen, ActionListener {
                                     }
                                     else
                                     {
-                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"brak przypisanego konta"));
                                     }
                                 } catch (SQLException ex) {
                                     System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -99,7 +99,7 @@ public class LoginScreen implements BodyScreen, ActionListener {
                                     }
                                     else
                                     {
-                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                                        parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"brak przypisanego konta"));
                                     }
                                 } catch (SQLException ex) {
                                     System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());

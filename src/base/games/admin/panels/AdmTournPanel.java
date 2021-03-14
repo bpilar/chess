@@ -96,7 +96,7 @@ public class AdmTournPanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmTournScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"niepoprawne dane"));
             }
         }
         if (object == deleteButton)
@@ -107,7 +107,7 @@ public class AdmTournPanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmTournScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"turniej nie jest pusty"));
             }
         }
     }

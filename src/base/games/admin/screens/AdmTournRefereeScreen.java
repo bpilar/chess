@@ -118,7 +118,7 @@ public class AdmTournRefereeScreen implements BodyScreen, ActionListener {
                 parent.switchCurrentScreenTo(new AdmTournRefereeScreen(parent,previousScreen,tur_id));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,this,"niepoprawne dane"));
             }
         }
     }

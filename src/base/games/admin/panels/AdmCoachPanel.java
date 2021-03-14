@@ -69,7 +69,7 @@ public class AdmCoachPanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmCoachScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"niepoprawne dane"));
             }
         }
         if (object == deleteButton)
@@ -80,7 +80,7 @@ public class AdmCoachPanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmCoachScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"trener jest gdzieś przypisany"));
             }
         }
     }
