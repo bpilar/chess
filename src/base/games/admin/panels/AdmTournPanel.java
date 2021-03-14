@@ -2,6 +2,7 @@ package base.games.admin.panels;
 
 import base.games.AppWindow;
 import base.games.Item;
+import base.games.admin.screens.AdmTournRefereeScreen;
 import base.games.admin.screens.AdmTournScreen;
 import base.games.screens.ErrorScreen;
 
@@ -24,7 +25,7 @@ public class AdmTournPanel extends JPanel implements ActionListener {
     public String mie_nazwa;
     public String sez_id;;
     public String sez_nazwa;
-    public JButton coachButton = new JButton("Dodaj sędziego");
+    public JButton refereeButton = new JButton("Dodaj sędziego");
     public JButton playerButton = new JButton("Dodaj zawodnika");
     public JButton matchButton = new JButton("Dodaj mecz");
     public JButton writeButton = new JButton("NADPISZ");
@@ -46,12 +47,12 @@ public class AdmTournPanel extends JPanel implements ActionListener {
         add(new JLabel(t_data));
         add(new JLabel(miejsce));
         add(new JLabel(sezon));
-        coachButton.addActionListener(this);
+        refereeButton.addActionListener(this);
         playerButton.addActionListener(this);
         matchButton.addActionListener(this);
         writeButton.addActionListener(this);
         deleteButton.addActionListener(this);
-        add(coachButton);
+        add(refereeButton);
         add(playerButton);
         add(matchButton);
         add(writeButton);
@@ -62,9 +63,9 @@ public class AdmTournPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         Object object = event.getSource();
 
-        if (object == coachButton)
+        if (object == refereeButton)
         {
-            //TODO
+            parent.switchCurrentScreenTo(new AdmTournRefereeScreen(parent,previousScreen, tur_id));
         }
         if (object == playerButton)
         {
