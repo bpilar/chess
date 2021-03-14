@@ -76,7 +76,7 @@ public class AdminScreen implements BodyScreen, ActionListener {
         }
         if (object == tournButton)
         {
-            parent.switchCurrentScreenTo(new TemplateScreen(parent,this));//2
+            parent.switchCurrentScreenTo(new AdmTournScreen(parent,this));
         }
         if (object == clubButton)
         {
