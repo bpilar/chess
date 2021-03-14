@@ -26,6 +26,7 @@ public class AdmTournPanel extends JPanel implements ActionListener {
     public String sez_nazwa;
     public JButton coachButton = new JButton("Dodaj sędziego");
     public JButton playerButton = new JButton("Dodaj zawodnika");
+    public JButton matchButton = new JButton("Dodaj mecz");
     public JButton writeButton = new JButton("NADPISZ");
     public JButton deleteButton = new JButton("USUŃ");
     public AdmTournPanel(AppWindow app, AdmTournScreen previous, String t_id, String t_nazwa, String t_data, String m_id, String miejsce, String s_id, String sezon) {
@@ -39,7 +40,7 @@ public class AdmTournPanel extends JPanel implements ActionListener {
         mie_nazwa = miejsce;
         sez_id = s_id;
         sez_nazwa = sezon;
-        setLayout(new GridLayout(1,6));
+        setLayout(new GridLayout(1,9));
         setMaximumSize(new Dimension(Integer.MAX_VALUE,30));
         add(new JLabel(t_nazwa));
         add(new JLabel(t_data));
@@ -47,10 +48,12 @@ public class AdmTournPanel extends JPanel implements ActionListener {
         add(new JLabel(sezon));
         coachButton.addActionListener(this);
         playerButton.addActionListener(this);
+        matchButton.addActionListener(this);
         writeButton.addActionListener(this);
         deleteButton.addActionListener(this);
         add(coachButton);
         add(playerButton);
+        add(matchButton);
         add(writeButton);
         add(deleteButton);
     }
@@ -64,6 +67,10 @@ public class AdmTournPanel extends JPanel implements ActionListener {
             //TODO
         }
         if (object == playerButton)
+        {
+            //TODO
+        }
+        if (object == matchButton)
         {
             //TODO
         }

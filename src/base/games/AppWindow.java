@@ -1,19 +1,21 @@
 package base.games;
 
-import base.games.screens.*;
+import base.games.screens.BodyScreen;
+import base.games.screens.StartScreen;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
-import java.util.Properties;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AppWindow extends JFrame implements ActionListener {
-    public static int width = 600;
+    public static int width = 800;
     public static int height = 400;
 
     public JFrame mainFrame;

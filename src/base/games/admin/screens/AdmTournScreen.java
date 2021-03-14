@@ -98,12 +98,13 @@ public class AdmTournScreen implements BodyScreen, ActionListener {
     static class heading extends JPanel {
         public heading() {
             super();
-            setLayout(new GridLayout(1,8));
+            setLayout(new GridLayout(1,9));
             setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
             add(new JLabel("Nazwa"));
             add(new JLabel("Data rozpoczęcia"));
             add(new JLabel("Miejsce"));
             add(new JLabel("Sezon"));
+            add(new JLabel(""));
             add(new JLabel(""));
             add(new JLabel(""));
             add(new JLabel(""));
