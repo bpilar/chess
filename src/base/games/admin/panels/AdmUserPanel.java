@@ -68,6 +68,18 @@ public class AdmUserPanel extends JPanel implements ActionListener {
                     stmt.registerOutParameter(1, Types.INTEGER);
                     stmt.execute();
                     count = stmt.getInt(1);
+                    if (Objects.equals(uzy_typ, "ADM")) {
+                        try (Statement stmt2 = parent.conn.createStatement();
+                             ResultSet rs2 = stmt2.executeQuery("SELECT COUNT(*) FROM uzytkownicy WHERE typ='ADM'")) {
+                            if (rs2.next()) {
+                                if (rs2.getInt(1) == 1) {
+                                    count++;
+                                }
+                            }
+                        } catch (SQLException ex) {
+                            System.out.println("Błąd wykonania polecenia: " + ex.getMessage());
+                        }
+                    }
                 } catch (SQLException ex) {
                     System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
                     parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
@@ -90,15 +102,35 @@ public class AdmUserPanel extends JPanel implements ActionListener {
         if (object == deleteButton)
         {
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
-                int changes = stmt.executeUpdate("UPDATE zawodnicy SET uzy_id=NULL WHERE uzy_id=" + uzy_id);
-                System.out.println("Zmieniono "+ changes + " zawodników");
-                changes = stmt.executeUpdate("UPDATE trenerzy SET uzy_id=NULL WHERE uzy_id=" + uzy_id);
-                System.out.println("Zmieniono "+ changes + " trenerów");
-                changes = stmt.executeUpdate("UPDATE sedziowie SET uzy_id=NULL WHERE uzy_id=" + uzy_id);
-                System.out.println("Zmieniono "+ changes + " sędziów");
-                changes = stmt.executeUpdate("DELETE FROM uzytkownicy WHERE uzy_id=" + uzy_id);
-                System.out.println("Usunięto "+ changes + " użytkowników");
-                parent.switchCurrentScreenTo(new AdmUserScreen(parent,previousScreen.previousScreen));
+                if (Objects.equals(uzy_typ, "ADM")) {
+                    try (Statement stmt2 = parent.conn.createStatement();
+                         ResultSet rs2 = stmt2.executeQuery("SELECT COUNT(*) FROM uzytkownicy WHERE typ='ADM'")) {
+                        if (rs2.next()) {
+                            if (rs2.getInt(1) != 1) {
+                                int changes = stmt.executeUpdate("DELETE FROM uzytkownicy WHERE uzy_id=" + uzy_id);
+                                System.out.println("Usunięto "+ changes + " użytkowników");
+                                parent.switchCurrentScreenTo(new AdmUserScreen(parent,previousScreen.previousScreen));
+                            }
+                            else {
+                                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                            }
+                        }
+                    } catch (SQLException ex) {
+                        System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+                    }
+                }
+                else {
+
+                    int changes = stmt.executeUpdate("UPDATE zawodnicy SET uzy_id=NULL WHERE uzy_id=" + uzy_id);
+                    System.out.println("Zmieniono "+ changes + " zawodników");
+                    changes = stmt.executeUpdate("UPDATE trenerzy SET uzy_id=NULL WHERE uzy_id=" + uzy_id);
+                    System.out.println("Zmieniono "+ changes + " trenerów");
+                    changes = stmt.executeUpdate("UPDATE sedziowie SET uzy_id=NULL WHERE uzy_id=" + uzy_id);
+                    System.out.println("Zmieniono "+ changes + " sędziów");
+                    changes = stmt.executeUpdate("DELETE FROM uzytkownicy WHERE uzy_id=" + uzy_id);
+                    System.out.println("Usunięto "+ changes + " użytkowników");
+                    parent.switchCurrentScreenTo(new AdmUserScreen(parent,previousScreen.previousScreen));
+                }
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
                 parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
