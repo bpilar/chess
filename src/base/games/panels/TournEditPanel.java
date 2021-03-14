@@ -2,6 +2,7 @@ package base.games.panels;
 
 import base.games.AppWindow;
 import base.games.screens.BodyScreen;
+import base.games.screens.ErrorScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,12 +37,25 @@ public class TournEditPanel extends JPanel implements ActionListener {
 
         if (object == summarizeButton)
         {
-            try (CallableStatement stmt = parent.conn.prepareCall("{call PodsumujTurniej(?)}")){
-                stmt.setString(1, tur_id);
-                stmt.execute();
+            try (Statement stmt2 = parent.conn.createStatement();
+                 ResultSet rs2 = stmt2.executeQuery("SELECT COUNT(*) FROM (SELECT * FROM udzialy WHERE wynik_w_turnieju IS NOT NULL AND tur_id=1)")) {
+                if (rs2.next()) {
+                    if (rs2.getInt(1) == 0) {
+                        try (CallableStatement stmt = parent.conn.prepareCall("{call PodsumujTurniej(?)}")){
+                            stmt.setString(1, tur_id);
+                            stmt.execute();
+                        } catch (SQLException ex) {
+                            System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+                        }
+                    }
+                    else {
+                        parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                    }
+                }
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
             }
+
         }
     }
 }
