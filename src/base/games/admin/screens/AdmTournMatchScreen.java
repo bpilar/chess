@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 
 public class AdmTournMatchScreen implements BodyScreen, ActionListener {
     public JPanel displayPanel = new JPanel();
@@ -148,10 +149,15 @@ public class AdmTournMatchScreen implements BodyScreen, ActionListener {
                 String zawb_id = (String) zawb_item.getValue();
                 Item zawc_item = (Item) zawCBox.getSelectedItem();
                 String zawc_id = (String) zawc_item.getValue();
-                int changes = stmt.executeUpdate("INSERT INTO mecze(wynik_meczu,data,sed_id,tur_id,zaw_id_b,zaw_id_c) VALUES ('NIEROZEGRANY','" +
-                        dateField.getText() + "'," + sed_id +"," + tur_id + "," + zawb_id + "," + zawc_id + ")");
-                System.out.println("Dodano "+ changes + " meczów do turnieju");
-                parent.switchCurrentScreenTo(new AdmTournMatchScreen(parent,previousScreen,tur_id));
+                if (!Objects.equals(zawb_id, zawc_id)) {
+                    int changes = stmt.executeUpdate("INSERT INTO mecze(wynik_meczu,data,sed_id,tur_id,zaw_id_b,zaw_id_c) VALUES ('NIEROZEGRANY','" +
+                            dateField.getText() + "'," + sed_id +"," + tur_id + "," + zawb_id + "," + zawc_id + ")");
+                    System.out.println("Dodano "+ changes + " meczów do turnieju");
+                    parent.switchCurrentScreenTo(new AdmTournMatchScreen(parent,previousScreen,tur_id));
+                }
+                else {
+                    parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
+                }
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
                 parent.switchCurrentScreenTo(new ErrorScreen(parent,this));
