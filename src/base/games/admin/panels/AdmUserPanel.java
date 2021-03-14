@@ -9,9 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Objects;
 
 public class AdmUserPanel extends JPanel implements ActionListener {
@@ -64,7 +62,17 @@ public class AdmUserPanel extends JPanel implements ActionListener {
                 }
             }
             else {
-                if(true) { //TODO check if count all == 0
+                int count = 1;
+                try (CallableStatement stmt = parent.conn.prepareCall("{? = call PoliczUzy(?)}")){
+                    stmt.setString(2, uzy_id);
+                    stmt.registerOutParameter(1, Types.INTEGER);
+                    stmt.execute();
+                    count = stmt.getInt(1);
+                } catch (SQLException ex) {
+                    System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+                    parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen));
+                }
+                if(count == 0) {
                     try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
                         int changes = stmt.executeUpdate("UPDATE uzytkownicy SET nazwa_uzy='" + newNazwa + "', haslo='" + newHaslo + "', typ='" + typ_item.getValue() + "' WHERE uzy_id=" + uzy_id);
                         System.out.println("Zmieniono "+ changes + " użytkowników");
