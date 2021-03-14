@@ -2,6 +2,7 @@ package base.games.admin.panels;
 
 import base.games.AppWindow;
 import base.games.Item;
+import base.games.admin.screens.AdmTournPlayerScreen;
 import base.games.admin.screens.AdmTournRefereeScreen;
 import base.games.admin.screens.AdmTournScreen;
 import base.games.screens.ErrorScreen;
@@ -69,7 +70,7 @@ public class AdmTournPanel extends JPanel implements ActionListener {
         }
         if (object == playerButton)
         {
-            //TODO
+            parent.switchCurrentScreenTo(new AdmTournPlayerScreen(parent,previousScreen, tur_id));
         }
         if (object == matchButton)
         {
