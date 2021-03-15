@@ -42,10 +42,10 @@ public class AdmPlaceScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT nazwa, adres FROM miejsca ORDER BY nazwa")) {
+             ResultSet rs = stmt.executeQuery("SELECT mie_id, nazwa, adres FROM miejsca ORDER BY nazwa")) {
             while (rs.next()) {
                 scrolledPanel.add(new AdmPlacePanel(parent,this,
-                        rs.getString(1),rs.getString(2)));
+                        rs.getString(1),rs.getString(2),rs.getString(3)));
             }
         } catch (SQLException ex) {
             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());

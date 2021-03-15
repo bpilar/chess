@@ -24,11 +24,12 @@ public class AdmPlayerPanel extends JPanel implements ActionListener {
     public String uzy_id;
     public String uzy_nazwa;
     public String klu_id;
+    public String klu_nazwa;
     public String tre_id;
     public String tre_nazwa;
     public JButton writeButton = new JButton("NADPISZ");
     public JButton deleteButton = new JButton("USUŃ");
-    public AdmPlayerPanel(AppWindow app, AdmPlayerScreen previous, String z_id, String imie, String nazwisko, String narod, String u_id, String uzytkownik, String k_id, String t_id, String trener) {
+    public AdmPlayerPanel(AppWindow app, AdmPlayerScreen previous, String z_id, String imie, String nazwisko, String narod, String u_id, String uzytkownik, String k_id, String klub, String t_id, String trener) {
         super();
         parent = app;
         previousScreen = previous;
@@ -39,6 +40,7 @@ public class AdmPlayerPanel extends JPanel implements ActionListener {
         uzy_id = u_id;
         uzy_nazwa = uzytkownik;
         klu_id = k_id;
+        klu_nazwa = klub;
         tre_id = t_id;
         tre_nazwa = trener;
         setLayout(new GridLayout(1,8));
@@ -47,7 +49,7 @@ public class AdmPlayerPanel extends JPanel implements ActionListener {
         add(new JLabel(nazwisko));
         add(new JLabel(narod));
         add(new JLabel(uzytkownik));
-        add(new JLabel(k_id));
+        add(new JLabel(klub));
         add(new JLabel(trener));
         writeButton.addActionListener(this);
         deleteButton.addActionListener(this);
@@ -78,7 +80,7 @@ public class AdmPlayerPanel extends JPanel implements ActionListener {
             if (!Objects.equals(tre_item.toString(), "")) newTre_id = (String) tre_item.getValue();
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
                 int changes = stmt.executeUpdate("UPDATE zawodnicy SET imie='" + newImie + "', nazwisko='" + newNazw +
-                        "', narodowosc='" + newNar + "', uzy_id=" + newUzy_id + ", kluby_nazwa='" + newKlu_id + "', tre_id='" + newTre_id + "' WHERE zaw_id=" + zaw_id);
+                        "', narodowosc='" + newNar + "', uzy_id=" + newUzy_id + ", klu_id=" + newKlu_id + ", tre_id='" + newTre_id + "' WHERE zaw_id=" + zaw_id);
                 System.out.println("Zmieniono "+ changes + " zawodników");
                 parent.switchCurrentScreenTo(new AdmPlayerScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {

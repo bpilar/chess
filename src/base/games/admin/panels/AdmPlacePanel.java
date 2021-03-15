@@ -15,14 +15,16 @@ import java.sql.Statement;
 public class AdmPlacePanel extends JPanel implements ActionListener {
     public AppWindow parent;
     public AdmPlaceScreen previousScreen;
+    public String pla_id;
     public String pla_nazwa;
     public String pla_adres;
     public JButton writeButton = new JButton("NADPISZ");
     public JButton deleteButton = new JButton("USUŃ");
-    public AdmPlacePanel(AppWindow app, AdmPlaceScreen previous, String nazwa, String adres) {
+    public AdmPlacePanel(AppWindow app, AdmPlaceScreen previous, String m_id, String nazwa, String adres) {
         super();
         parent = app;
         previousScreen = previous;
+        pla_id = m_id;
         pla_nazwa = nazwa;
         pla_adres = adres;
         setLayout(new GridLayout(1,4));
@@ -41,10 +43,12 @@ public class AdmPlacePanel extends JPanel implements ActionListener {
 
         if (object == writeButton)
         {
+            String newNazwa = previousScreen.nameField.getText();
+            if (newNazwa.length() == 0) newNazwa = pla_nazwa;
             String newAdres = previousScreen.addresField.getText();
             if (newAdres.length() == 0) newAdres = pla_adres;
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
-                int changes = stmt.executeUpdate("UPDATE miejsca SET adres='" + newAdres + "' WHERE nazwa='" + pla_nazwa + "'");
+                int changes = stmt.executeUpdate("UPDATE miejsca SET nazwa='" + newNazwa + "', adres='" + newAdres + "' WHERE mie_id='" + pla_id + "'");
                 System.out.println("Zmieniono "+ changes + " miejsc");
                 parent.switchCurrentScreenTo(new AdmPlaceScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
@@ -60,7 +64,7 @@ public class AdmPlacePanel extends JPanel implements ActionListener {
                 parent.switchCurrentScreenTo(new AdmPlaceScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
-                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"miejsce jest gidześ przypisane"));
+                parent.switchCurrentScreenTo(new ErrorScreen(parent,previousScreen,"miejsce jest gdzieś przypisane"));
             }
         }
     }

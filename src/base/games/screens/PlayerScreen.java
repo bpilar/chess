@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
 
 public class PlayerScreen implements BodyScreen, ActionListener {
     public JPanel displayPanel = new JPanel();
@@ -32,8 +31,8 @@ public class PlayerScreen implements BodyScreen, ActionListener {
         centerPanel.add(snapCenterPanel);
         tournButton.addActionListener(this);
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT z.imie, z.nazwisko, z.narodowosc, z.punkty, k.nazwa, k.miejsca_nazwa FROM zawodnicy z JOIN kluby k " +
-                     "ON z.kluby_nazwa=k.nazwa WHERE z.zaw_id = " + zaw_id)) {
+             ResultSet rs = stmt.executeQuery("SELECT z.imie, z.nazwisko, z.narodowosc, z.punkty, k.nazwa, m.nazwa FROM zawodnicy z, kluby k, miejsca m " +
+                     "WHERE z.klu_id=k.klu_id AND k.mie_id=m.mie_id AND z.zaw_id = " + zaw_id)) {
             if (rs.next()) {
                 snapCenterPanel.add(new JLabel("Imię: " + rs.getString(1)));
                 snapCenterPanel.add(new JLabel("Nazwisko: " + rs.getString(2)));

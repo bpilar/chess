@@ -47,12 +47,12 @@ public class AdmPlayerScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT z.zaw_id, z.imie, z.nazwisko, z.narodowosc, z.uzy_id, u.nazwa_uzy, k.nazwa, z.tre_id, t.imie || ' ' || t.nazwisko " +
-                     "FROM zawodnicy z, uzytkownicy u, kluby k, trenerzy t WHERE z.uzy_id=u.uzy_id(+) AND k.nazwa=z.kluby_nazwa AND t.tre_id=z.tre_id ORDER BY z.nazwisko,z.imie")) {
+             ResultSet rs = stmt.executeQuery("SELECT z.zaw_id, z.imie, z.nazwisko, z.narodowosc, z.uzy_id, u.nazwa_uzy, z.klu_id, k.nazwa, z.tre_id, t.imie || ' ' || t.nazwisko " +
+                     "FROM zawodnicy z, uzytkownicy u, kluby k, trenerzy t WHERE z.uzy_id=u.uzy_id(+) AND k.klu_id=z.klu_id AND t.tre_id=z.tre_id ORDER BY z.nazwisko,z.imie")) {
             while (rs.next()) {
                 scrolledPanel.add(new AdmPlayerPanel(parent,this,
                         rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),
-                        rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+                        rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10)));
             }
         } catch (SQLException ex) {
             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -88,9 +88,9 @@ public class AdmPlayerScreen implements BodyScreen, ActionListener {
             add(uzyBox);
             kluBox.addItem(new Item<String>("nowrite", ""));
             try (Statement stmt = parent.conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT nazwa FROM kluby")) {
+                 ResultSet rs = stmt.executeQuery("SELECT klu_id, nazwa FROM kluby")) {
                 while (rs.next()) {
-                    kluBox.addItem(new Item<String>(rs.getString(1), rs.getString(1)));
+                    kluBox.addItem(new Item<String>(rs.getString(1), rs.getString(2)));
                 }
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -156,8 +156,8 @@ public class AdmPlayerScreen implements BodyScreen, ActionListener {
                 Item tre_item = (Item) treBox.getSelectedItem();
                 String tre_id = (String) tre_item.getValue();
                 if (tre_id == "nowrite") tre_id = "NULL";
-                int changes = stmt.executeUpdate("INSERT INTO zawodnicy(imie,nazwisko,narodowosc,punkty,uzy_id,kluby_nazwa,tre_id) VALUES ('" +
-                        nameField.getText() + "','" + surnameField.getText() + "','" + nationField.getText() + "',0," + uzy_id + ",'" + klu_id + "'," + tre_id + ")");
+                int changes = stmt.executeUpdate("INSERT INTO zawodnicy(imie,nazwisko,narodowosc,punkty,uzy_id,klu_id,tre_id) VALUES ('" +
+                        nameField.getText() + "','" + surnameField.getText() + "','" + nationField.getText() + "',0," + uzy_id + "," + klu_id + "," + tre_id + ")");
                 System.out.println("Wstawiono "+ changes + " zawodników");
                 parent.switchCurrentScreenTo(new AdmPlayerScreen(parent,previousScreen));
             } catch (SQLException ex) {

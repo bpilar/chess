@@ -1,6 +1,7 @@
 package base.games.admin.screens;
 
 import base.games.AppWindow;
+import base.games.Item;
 import base.games.admin.panels.AdmClubPanel;
 import base.games.screens.BodyScreen;
 import base.games.screens.ErrorScreen;
@@ -21,7 +22,7 @@ public class AdmClubScreen implements BodyScreen, ActionListener {
     public JPanel centerPanel = new JPanel();
     public inputPanel inputpanel;
     public JTextField nameField = new JTextField();
-    public JTextField placeField = new JTextField();
+    public JComboBox<Item<String>> mieBox = new JComboBox<Item<String>>();
     public JButton insertButton = new JButton("Wstaw");
     public JScrollPane scrollPane;
     public JPanel scrolledPanel = new JPanel();
@@ -42,10 +43,10 @@ public class AdmClubScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT nazwa, miejsca_nazwa FROM kluby ORDER BY nazwa")) {
+             ResultSet rs = stmt.executeQuery("SELECT k.klu_id, k.nazwa, m.mie_id, m.nazwa FROM kluby k, miejsca m WHERE k.mie_id=m.mie_id ORDER BY k.nazwa")) {
             while (rs.next()) {
                 scrolledPanel.add(new AdmClubPanel(parent,this,
-                        rs.getString(1),rs.getString(2)));
+                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
             }
         } catch (SQLException ex) {
             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -62,7 +63,16 @@ public class AdmClubScreen implements BodyScreen, ActionListener {
             add(new JLabel("Miejsce"));
             add(new JLabel(""));
             add(nameField);
-            add(placeField);
+            mieBox.addItem(new Item<String>("nowrite", ""));
+            try (Statement stmt = parent.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT mie_id, nazwa FROM miejsca")) {
+                while (rs.next()) {
+                    mieBox.addItem(new Item<String>(rs.getString(1), rs.getString(2)));
+                }
+            } catch (SQLException ex) {
+                System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
+            }
+            add(mieBox);
             add(insertButton);
         }
 
@@ -101,7 +111,10 @@ public class AdmClubScreen implements BodyScreen, ActionListener {
         if (object == insertButton)
         {
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
-                int changes = stmt.executeUpdate("INSERT INTO kluby(nazwa,miejsca_nazwa) VALUES ('" + nameField.getText() + "','" + placeField.getText() + "')");
+                Item mie_item = (Item) mieBox.getSelectedItem();
+                String mie_id = (String) mie_item.getValue();
+                if (mie_id == "nowrite") mie_id = "NULL";
+                int changes = stmt.executeUpdate("INSERT INTO kluby(nazwa,mie_id) VALUES ('" + nameField.getText() + "'," + mie_id + ")");
                 System.out.println("Wstawiono "+ changes + " klubów");
                 parent.switchCurrentScreenTo(new AdmClubScreen(parent,previousScreen));
             } catch (SQLException ex) {

@@ -45,10 +45,10 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT t.tre_id, t.imie, t.nazwisko, t.uzy_id, u.nazwa_uzy, k.nazwa FROM trenerzy t, uzytkownicy u, kluby k WHERE t.uzy_id=u.uzy_id(+) AND k.nazwa=t.kluby_nazwa ORDER BY t.nazwisko,t.imie")) {
+             ResultSet rs = stmt.executeQuery("SELECT t.tre_id, t.imie, t.nazwisko, t.uzy_id, u.nazwa_uzy, t.klu_id, k.nazwa FROM trenerzy t, uzytkownicy u, kluby k WHERE t.uzy_id=u.uzy_id(+) AND k.klu_id=t.klu_id ORDER BY t.nazwisko,t.imie")) {
             while (rs.next()) {
                 scrolledPanel.add(new AdmCoachPanel(parent,this,
-                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6)));
+                        rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
             }
         } catch (SQLException ex) {
             System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -81,9 +81,9 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
             add(uzyBox);
             kluBox.addItem(new Item<String>("nowrite", ""));
             try (Statement stmt = parent.conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT nazwa FROM kluby")) {
+                 ResultSet rs = stmt.executeQuery("SELECT klu_id, nazwa FROM kluby")) {
                 while (rs.next()) {
-                    kluBox.addItem(new Item<String>(rs.getString(1), rs.getString(1)));
+                    kluBox.addItem(new Item<String>(rs.getString(1), rs.getString(2)));
                 }
             } catch (SQLException ex) {
                 System.out.println("Błąd wykonania polecenia: "+ ex.getMessage());
@@ -134,7 +134,7 @@ public class AdmCoachScreen implements BodyScreen, ActionListener {
                 Item klu_item = (Item) kluBox.getSelectedItem();
                 String klu_id = (String) klu_item.getValue();
                 if (klu_id == "nowrite") klu_id = "NULL";
-                int changes = stmt.executeUpdate("INSERT INTO trenerzy(imie,nazwisko,uzy_id,kluby_nazwa) VALUES ('" + nameField.getText() + "','" + surnameField.getText() + "'," + uzy_id + ",'" + klu_id + "')");
+                int changes = stmt.executeUpdate("INSERT INTO trenerzy(imie,nazwisko,uzy_id,klu_id) VALUES ('" + nameField.getText() + "','" + surnameField.getText() + "'," + uzy_id + "," + klu_id + ")");
                 System.out.println("Wstawiono "+ changes + " trenerów");
                 parent.switchCurrentScreenTo(new AdmCoachScreen(parent,previousScreen));
             } catch (SQLException ex) {
