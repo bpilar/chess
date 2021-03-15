@@ -91,7 +91,7 @@ public class AdmTournPanel extends JPanel implements ActionListener {
             if (!Objects.equals(sez_item.toString(), "")) newSez_id = (String) sez_item.getValue();
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
                 int changes = stmt.executeUpdate("UPDATE turnieje SET nazwa='" + newNazwa +
-                        "', data_roz='" + newData + "', miejsca_nazwa='" + newMie_id + "', sez_id=" + newSez_id + " WHERE tur_id=" + tur_id);
+                        "', data_roz='" + newData + "', mie_id=" + newMie_id + ", sez_id=" + newSez_id + " WHERE tur_id=" + tur_id);
                 System.out.println("Zmieniono "+ changes + " turniejów");
                 parent.switchCurrentScreenTo(new AdmTournScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {

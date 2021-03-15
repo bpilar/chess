@@ -31,8 +31,8 @@ public class CoachScreen implements BodyScreen, ActionListener {
         centerPanel.add(snapCenterPanel);
         playersButton.addActionListener(this);
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT t.imie, t.nazwisko, k.nazwa, k.miejsca_nazwa " +
-                     "FROM trenerzy t JOIN kluby k ON t.kluby_nazwa=k.nazwa WHERE t.tre_id=" + tre_id)) {
+             ResultSet rs = stmt.executeQuery("SELECT t.imie, t.nazwisko, k.nazwa, m.nazwa " +
+                     "FROM trenerzy t,kluby k, miejsca m WHERE t.klu_id=k.klu_id AND k.mie_id=m.mie_id AND t.tre_id=" + tre_id)) {
             if (rs.next()) {
                 snapCenterPanel.add(new JLabel("Imię: " + rs.getString(1)));
                 snapCenterPanel.add(new JLabel("Nazwisko: " + rs.getString(2)));

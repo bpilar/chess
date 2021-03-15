@@ -23,9 +23,10 @@ public class AdmCoachPanel extends JPanel implements ActionListener {
     public String uzy_id;
     public String uzy_nazwa;
     public String klu_id;
+    public String klu_nazwa;
     public JButton writeButton = new JButton("NADPISZ");
     public JButton deleteButton = new JButton("USUŃ");
-    public AdmCoachPanel(AppWindow app, AdmCoachScreen previous, String t_id, String imie, String nazwisko, String u_id, String uzytkownik, String k_id) {
+    public AdmCoachPanel(AppWindow app, AdmCoachScreen previous, String t_id, String imie, String nazwisko, String u_id, String uzytkownik, String k_id, String klub) {
         super();
         parent = app;
         previousScreen = previous;
@@ -35,12 +36,13 @@ public class AdmCoachPanel extends JPanel implements ActionListener {
         uzy_id = u_id;
         uzy_nazwa = uzytkownik;
         klu_id = k_id;
+        klu_nazwa = klub;
         setLayout(new GridLayout(1,6));
         setMaximumSize(new Dimension(Integer.MAX_VALUE,30));
         add(new JLabel(imie));
         add(new JLabel(nazwisko));
         add(new JLabel(uzytkownik));
-        add(new JLabel(k_id));
+        add(new JLabel(klub));
         writeButton.addActionListener(this);
         deleteButton.addActionListener(this);
         add(writeButton);
@@ -64,7 +66,7 @@ public class AdmCoachPanel extends JPanel implements ActionListener {
             String newKlu_id = klu_id;
             if (!Objects.equals(klu_item.toString(), "")) newKlu_id = (String) klu_item.getValue();
             try (Statement stmt = parent.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);) {
-                int changes = stmt.executeUpdate("UPDATE trenerzy SET imie='" + newImie + "', nazwisko='" + newNazw + "', uzy_id=" + newUzy_id + ", kluby_nazwa='" + newKlu_id + "' WHERE tre_id=" + tre_id);
+                int changes = stmt.executeUpdate("UPDATE trenerzy SET imie='" + newImie + "', nazwisko='" + newNazw + "', uzy_id=" + newUzy_id + ", klu_id=" + newKlu_id + " WHERE tre_id=" + tre_id);
                 System.out.println("Zmieniono "+ changes + " trenerów");
                 parent.switchCurrentScreenTo(new AdmCoachScreen(parent,previousScreen.previousScreen));
             } catch (SQLException ex) {

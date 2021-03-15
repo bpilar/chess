@@ -45,8 +45,8 @@ public class AdmTournScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT t.tur_id, t.nazwa, TO_CHAR(t.data_roz,'YYYY-MM-DD'), m.nazwa ,m.nazwa || ' ' || m.adres, s.sez_id, s.nazwa || ' ' || TO_CHAR(s.rok,'YYYY') " +
-                     "FROM turnieje t, sezony s, miejsca m WHERE t.miejsca_nazwa=m.nazwa AND t.sez_id=s.sez_id(+) ORDER BY s.rok, t.data_roz")) {
+             ResultSet rs = stmt.executeQuery("SELECT t.tur_id, t.nazwa, TO_CHAR(t.data_roz,'YYYY-MM-DD'), m.mie_id ,m.nazwa || ' ' || m.adres, s.sez_id, s.nazwa || ' ' || TO_CHAR(s.rok,'YYYY') " +
+                     "FROM turnieje t, sezony s, miejsca m WHERE t.mie_id=m.mie_id AND t.sez_id=s.sez_id(+) ORDER BY s.rok, t.data_roz")) {
             while (rs.next()) {
                 scrolledPanel.add(new AdmTournPanel(parent,this,
                         rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
@@ -72,7 +72,7 @@ public class AdmTournScreen implements BodyScreen, ActionListener {
             add(dateField);
             mieBox.addItem(new Item<String>("nowrite", ""));
             try (Statement stmt = parent.conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT nazwa, nazwa || ' ' || adres FROM miejsca ORDER BY nazwa")) {
+                 ResultSet rs = stmt.executeQuery("SELECT mie_id, nazwa || ' ' || adres FROM miejsca ORDER BY nazwa")) {
                 while (rs.next()) {
                     mieBox.addItem(new Item<String>(rs.getString(1), rs.getString(2)));
                 }
@@ -139,8 +139,8 @@ public class AdmTournScreen implements BodyScreen, ActionListener {
                 Item sez_item = (Item) sezBox.getSelectedItem();
                 String sez_id = (String) sez_item.getValue();
                 if (sez_id == "nowrite") sez_id = "NULL";
-                int changes = stmt.executeUpdate("INSERT INTO turnieje(nazwa,data_roz,miejsca_nazwa,sez_id) VALUES ('" +
-                        nameField.getText() + "','" + dateField.getText() + "','" + mie_id + "'," + sez_id + ")");
+                int changes = stmt.executeUpdate("INSERT INTO turnieje(nazwa,data_roz,mie_id,sez_id) VALUES ('" +
+                        nameField.getText() + "','" + dateField.getText() + "'," + mie_id + "," + sez_id + ")");
                 System.out.println("Wstawiono "+ changes + " turniejów");
                 parent.switchCurrentScreenTo(new AdmTournScreen(parent,previousScreen));
             } catch (SQLException ex) {

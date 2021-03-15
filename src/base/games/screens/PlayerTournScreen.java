@@ -33,9 +33,9 @@ public class PlayerTournScreen implements BodyScreen, ActionListener {
         scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
         scrolledPanel.add(new heading());
         try (Statement stmt = parent.conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT t.tur_id, t.nazwa, TO_CHAR(t.data_roz,'YYYY-MM-DD'), t.miejsca_nazwa, s.nazwa, TO_CHAR(s.rok,'YYYY'), u.wynik_w_turnieju, u.miejsce_w_turnieju " +
-                     "FROM udzialy u, turnieje t, sezony s " +
-                     "WHERE u.tur_id=t.tur_id AND t.sez_id=s.sez_id(+) AND u.zaw_id=" + zaw_id + " ORDER BY s.rok, t.data_roz")) {
+             ResultSet rs = stmt.executeQuery("SELECT t.tur_id, t.nazwa, TO_CHAR(t.data_roz,'YYYY-MM-DD'), m.nazwa, s.nazwa, TO_CHAR(s.rok,'YYYY'), u.wynik_w_turnieju, u.miejsce_w_turnieju " +
+                     "FROM udzialy u, turnieje t, sezony s, miejsca m " +
+                     "WHERE u.tur_id=t.tur_id AND t.sez_id=s.sez_id(+) AND t.mie_id=m.mie_id AND u.zaw_id=" + zaw_id + " ORDER BY s.rok, t.data_roz")) {
             while (rs.next()) {
                 scrolledPanel.add(new TournPanel(parent,this,
                         rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
